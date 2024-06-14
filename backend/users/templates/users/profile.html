@@ -1,0 +1,59 @@
+{% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container-fluid d-flex h-100 justify-content-center align-items-center p-0">
+    <div class="row bg-white shadow-sm">
+        <div class="col border rounded p-5">
+            <h3 class="text-center mb-5">Личный кабинет</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Номер счета</th>
+                            <th>Фамилия</th>
+                            <th>Имя</th>
+                            <th>Отчество</th>
+                            <th>Дата рождения</th>
+                            <th>ИНН</th>
+                            <th>Ответственный</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for client in clients %}
+                        <tr>
+                            <td>{{ client.account_number }}</td>
+                            <td>{{ client.surname }}</td>
+                            <td>{{ client.name }}</td>
+                            <td>{{ client.patronymic }}</td>
+                            <td>{{ client.date_birth }}</td>
+                            <td>{{ client.inn }}</td>
+                            <td>{{ client.responsible }}</td>
+                            <td>
+                                <form method="POST" action="{% url 'update_status' client.id %}">
+                                    {% csrf_token %}
+                                    <select name="status">
+                                        {% for choice in client.STATUS_CHOICES %}
+                                        <option value="{{ choice.0 }}">
+                                            {{ choice.1 }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Изменить</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" class="btn btn-light btn-lg">
+                <a href="{% url 'logout' %}">Выход</a>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
